@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scentify Prediction</title>
+  </head>
+  <body>
+    <h1>Scentify Perfume Prediction</h1>
+    <form id="predict-form">
+      <label for="mq3">MQ-3:</label>
+      <input
+        type="number"
+        id="mq3"
+        name="mq3"
+        step="any"
+        required
+      /><br /><br />
+      <label for="mq4">MQ-4:</label>
+      <input
+        type="number"
+        id="mq4"
+        name="mq4"
+        step="any"
+        required
+      /><br /><br />
+      <label for="mq135">MQ-135:</label>
+      <input
+        type="number"
+        id="mq135"
+        name="mq135"
+        step="any"
+        required
+      /><br /><br />
+      <button type="submit">Predict</button>
+    </form>
+    <h2 id="result"></h2>
+
+    <script>
+      document
+        .getElementById("predict-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const mq3 = parseFloat(document.getElementById("mq3").value);
+          const mq4 = parseFloat(document.getElementById("mq4").value);
+          const mq135 = parseFloat(document.getElementById("mq135").value);
+
+          const payload = {
+            features: [mq3, mq4, mq135],
+          };
+
+          fetch("/predict", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("result").textContent =
+                "Prediction: " + data.prediction;
+            })
+            .catch((error) => {
+              document.getElementById("result").textContent = "Error: " + error;
+            });
+        });
+    </script>
+  </body>
+</html>
